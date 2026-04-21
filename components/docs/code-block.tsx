@@ -2,20 +2,24 @@
 import { useState, useMemo } from 'react';
 import { CopyButton } from './copy-button';
 
-const languages = ['curl', 'javascript', 'python', 'go', 'typescript'];
+// Default tabs if none are provided
+const DEFAULT_LANGS = ['curl', 'javascript', 'python', 'go', 'typescript'];
 
-const CodeSwitcher = ({ codeSnippets }: { codeSnippets: Record<string, string> }) => {
-    const [lang, setLang] = useState('curl');
+const CodeSwitcher = ({ 
+    codeSnippets, 
+    tabs = DEFAULT_LANGS // Added this prop
+}: { 
+    codeSnippets: Record<string, string>, 
+    tabs?: string[] 
+}) => {
+    // Set the initial language to the first tab provided
+    const [lang, setLang] = useState(tabs[0]);
 
     const highlightCode = (code: string) => {
         if (!code) return "";
-        
         let html = code
-            .replace(/&/g, "&amp;")
-            .replace(/</g, "&lt;")
-            .replace(/>/g, "&gt;")
-            .replace(/"/g, "&quot;")
-            .replace(/'/g, "&#039;");
+            .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;").replace(/'/g, "&#039;");
 
         return html
             .replace(/(&quot;.*?&quot;|&#039;.*?&#039;)/g, '<span class="code-string">$1</span>')
@@ -27,16 +31,14 @@ const CodeSwitcher = ({ codeSnippets }: { codeSnippets: Record<string, string> }
     };
 
     const renderedCode = useMemo(() => {
-        const raw = codeSnippets[lang] || codeSnippets['curl'] || "";
-        return highlightCode(raw);
+        return highlightCode(codeSnippets[lang] || "");
     }, [lang, codeSnippets]);
 
     return (
-        <div className="mt-6 rounded-xl overflow-hidden border border-white/5 bg-[#0d0d0f] shadow-2xl w-full max-w-full">
-            {/* Header / Tabs */}
+        <div className="mt-6 rounded-xl overflow-hidden border border-white/5 bg-[#0d0d0f] shadow-2xl w-full">
             <div className="flex items-center justify-between px-2 bg-[#111113] border-b border-white/5">
                 <div className="flex flex-wrap">
-                    {languages.map((l) => (
+                    {tabs.map((l) => (
                         <button
                             type="button"
                             key={l}
@@ -57,12 +59,10 @@ const CodeSwitcher = ({ codeSnippets }: { codeSnippets: Record<string, string> }
                 </div>
             </div>
 
-            {/* Code Body */}
             <div className="relative group overflow-hidden w-full">
-                <pre className="p-6 text-[13px] font-mono text-gray-400 leading-relaxed selection:bg-[#00f2ad]/20 min-h-30 
-                               whitespace-pre-wrap break-all md:break-normal overflow-x-hidden">
+                <pre className="p-6 text-[13px] font-mono text-gray-400 leading-relaxed min-h-30 whitespace-pre-wrap break-all">
                     <code 
-                        className="block whitespace-pre-wrap wrap-break-word"
+                        className="block whitespace-pre-wrap"
                         dangerouslySetInnerHTML={{ __html: renderedCode }} 
                     />
                 </pre>
