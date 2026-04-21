@@ -2,17 +2,15 @@
 import { useState, useMemo } from 'react';
 import { CopyButton } from './copy-button';
 
-// Default tabs if none are provided
 const DEFAULT_LANGS = ['curl', 'javascript', 'python', 'go', 'typescript'];
 
 const CodeSwitcher = ({ 
     codeSnippets, 
-    tabs = DEFAULT_LANGS // Added this prop
+    tabs = DEFAULT_LANGS 
 }: { 
     codeSnippets: Record<string, string>, 
     tabs?: string[] 
 }) => {
-    // Set the initial language to the first tab provided
     const [lang, setLang] = useState(tabs[0]);
 
     const highlightCode = (code: string) => {
