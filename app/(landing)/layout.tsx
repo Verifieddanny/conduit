@@ -1,7 +1,8 @@
-import { Inter, Space_Grotesk, JetBrains_Mono, IBM_Plex_Sans, IBM_Plex_Sans_KR } from "next/font/google";
+import { Inter, IBM_Plex_Sans, IBM_Plex_Sans_KR } from "next/font/google";
 import "../globals.css";
 import Footer from "@/components/footer";
 import Navbar from "@/components/navbar";
+import QueryProvider from "@/providers/query-provider";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -31,9 +32,11 @@ export default function RootLayout({
       className={`${inter.variable} ${ibmPlexSans.variable} ${ibmPlexSansKR.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col no-scrollbar">
-        <Navbar />
-        {children}
-        <Footer/>
+        <QueryProvider>
+          <Navbar />
+          {children}
+          <Footer />
+        </QueryProvider>
       </body>
     </html>
   );
