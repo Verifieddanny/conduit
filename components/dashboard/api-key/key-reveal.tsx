@@ -1,7 +1,16 @@
 "use client";
 import { AlertTriangle, Copy, CheckCircle2 } from "lucide-react";
+import { useState } from "react";
 
-export default function KeyRevealCard() {
+export default function KeyRevealCard({ apiKey, onDone }: { apiKey: string, onDone: () => void }) {
+  const [copied, setCopied] = useState(false);
+
+  const handleCopy = () => {
+    navigator.clipboard.writeText(apiKey);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
   return (
     <div className="bg-[#111113] border border-white/5 rounded-3xl p-8 relative overflow-hidden">
       <div className="mb-8">
@@ -28,14 +37,21 @@ export default function KeyRevealCard() {
             <div className="space-y-2">
                 <span className="text-[9px] font-bold text-gray-600 uppercase tracking-widest">API key</span>
                 <div className="text-xl font-mono text-gray-300 break-all leading-relaxed">
-                    cdt_4mx2v8as9ke7p2n1r6wq3d8fz0h5t1c
+                    {apiKey}
                 </div>
             </div>
             <div className="flex gap-2 shrink-0">
-                <button className="flex items-center gap-2 px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-[11px] font-bold text-gray-400 hover:text-white transition-all">
-                    <Copy size={14} /> Copy
+                <button 
+                    onClick={handleCopy}
+                    className="flex items-center gap-2 px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-[11px] font-bold text-gray-400 hover:text-white transition-all"
+                >
+                    {copied ? <CheckCircle2 size={14} className="text-[#00f2ad]" /> : <Copy size={14} />}
+                    {copied ? "Copied" : "Copy"}
                 </button>
-                <button className="px-4 py-2 bg-[#00f2ad] text-black rounded-lg text-[11px] font-bold hover:bg-[#00d195] transition-all shadow-[0_0_15px_rgba(0,242,173,0.2)]">
+                <button 
+                    onClick={onDone}
+                    className="px-4 py-2 bg-[#00f2ad] text-black rounded-lg text-[11px] font-bold hover:bg-[#00d195] transition-all shadow-[0_0_15px_rgba(0,242,173,0.2)]"
+                >
                     I've copied my key
                 </button>
             </div>

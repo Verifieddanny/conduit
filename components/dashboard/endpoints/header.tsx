@@ -24,7 +24,7 @@ export default function EndpointsHeader() {
             className="w-full bg-[#111113] border border-white/5 rounded-lg py-2 pl-9 pr-4 text-xs outline-none focus:border-[#00f2ad]/30"
           />
         </div>
-        <button title="create endpoint" type="button" className="flex lg:hidden items-center gap-2 bg-[#00f2ad] text-black px-4 py-2 rounded-lg font-bold text-xs">
+        <button title="create endpoint" type="button" className="cursor-pointer flex lg:hidden items-center gap-2 bg-[#00f2ad] text-black px-4 py-2 rounded-lg font-bold text-xs">
           <Plus size={16} />
         </button>
       </div>

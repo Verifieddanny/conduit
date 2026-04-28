@@ -1,12 +1,13 @@
 "use client";
 import { useAuth } from "@/hooks/use-auth";
-import { ArrowRight, UserPlus } from "lucide-react";
+import { ArrowRight, UserPlus, AlertCircle, Loader2 } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 
 const RegisterForm = () => {
-  const { registerMutation } = useAuth();
+  const { registerMutation, getErrorMessage } = useAuth();
   const [formData, setFormData] = useState({ username: '', email: '', password: '' });
+  const [passwordVisible, setPasswordVisible] = useState(false);
 
   const handleSubmit = (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -33,6 +34,7 @@ const RegisterForm = () => {
             className="w-full bg-[#0a0a0a] border border-white/10 rounded-lg p-3 text-sm focus:border-[#00f2ad] outline-none transition-colors placeholder:text-gray-700"
             value={formData.username}
             onChange={(e) => setFormData({ ...formData, username: e.target.value })}
+            disabled={registerMutation.isPending}
           />
         </div>
 
@@ -44,26 +46,56 @@ const RegisterForm = () => {
             className="w-full bg-[#0a0a0a] border border-white/10 rounded-lg p-3 text-sm focus:border-[#00f2ad] outline-none transition-colors placeholder:text-gray-700"
             value={formData.email}
             onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+            disabled={registerMutation.isPending}
           />
         </div>
 
         <div>
           <div className="flex justify-between items-center mb-2">
             <label className="text-[10px] text-gray-500 uppercase tracking-widest font-bold block">Password</label>
-            <button type="button" className="text-[10px] text-gray-600 hover:text-white uppercase font-bold">Show</button>
+            <button 
+              type="button" 
+              className="cursor-pointer text-[10px] text-gray-600 hover:text-white uppercase font-bold"
+              onClick={() => setPasswordVisible(!passwordVisible)}
+            >
+              {passwordVisible ? 'Hide' : 'Show'}
+            </button>
           </div>
           <input 
-            type="password" 
+            type={passwordVisible ? "text" : "password"} 
             placeholder="Create a strong password"
             className="w-full bg-[#0a0a0a] border border-white/10 rounded-lg p-3 text-sm focus:border-[#00f2ad] outline-none transition-colors placeholder:text-gray-700"
             value={formData.password}
             onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+            disabled={registerMutation.isPending}
           />
         </div>
 
-        <button className="w-full py-3.5 bg-[#00f2ad] text-black font-bold rounded-xl flex items-center justify-center gap-2 hover:bg-[#00d195] transition-all group">
-          Create Account
-          <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
+        {registerMutation.isError && (
+            <div className="p-4 bg-red-950/20 border-l-2 border-red-500 rounded-r-lg flex gap-3 items-start">
+                <AlertCircle size={16} className="text-red-500 shrink-0 mt-0.5" />
+                <p className="text-[11px] text-red-200/70 leading-relaxed">
+                    {getErrorMessage(registerMutation.error)}
+                </p>
+            </div>
+        )}
+
+        <button 
+            type="submit"
+            disabled={registerMutation.isPending}
+            className="cursor-pointer w-full py-3.5 bg-[#00f2ad] text-black font-bold rounded-xl flex items-center justify-center gap-2 hover:bg-[#00d195] transition-all group disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          {registerMutation.isPending ? (
+              <>
+                  <Loader2 size={16} className="animate-spin" />
+                  Creating account...
+              </>
+          ) : (
+              <>
+                  Create Account
+                  <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
+              </>
+          )}
         </button>
       </form>
 

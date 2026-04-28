@@ -1,9 +1,28 @@
+"use client";
+import { useEndpoints } from "@/hooks/use-endpoints";
+import { Loader2 } from "lucide-react";
+
 export default function EndpointsStats() {
+  const { endpoints, isLoading } = useEndpoints();
+
+  if (isLoading) {
+    return (
+        <div className="flex items-center justify-center py-10 bg-[#111113] border border-white/5 rounded-2xl">
+            <Loader2 className="animate-spin text-gray-500" size={20} />
+        </div>
+    );
+  }
+
+  const activeCount = endpoints.filter(ep => ep.status === 'active').length;
+  const inactiveCount = endpoints.length - activeCount;
+  const sources = Array.from(new Set(endpoints.map(ep => ep.externalSource)));
+  const attentionCount = endpoints.filter(ep => (ep.deadCount || 0) > 0 || (ep.failedCount || 0) > 10).length;
+
   const stats = [
-    { label: "Active Endpoints", value: "14", sub: "4 inactive or maintenance mode" },
-    { label: "Sources Connected", value: "6", sub: "GitHub, Stripe, Slack, Paystack, Shopify, Simulator" },
-    { label: "Auto-generated Secrets", value: "7", sub: "Shown once and stored encrypted" },
-    { label: "Needs Attention", value: "3", sub: "High retries or inactive destination", color: "text-amber-500" },
+    { label: "Active Endpoints", value: activeCount.toString(), sub: `${inactiveCount} currently inactive` },
+    { label: "Sources Connected", value: sources.length.toString(), sub: sources.slice(0, 3).join(', ') + (sources.length > 3 ? '...' : '') },
+    { label: "Total Endpoints", value: endpoints.length.toString(), sub: "Total registered URLs" },
+    { label: "Needs Attention", value: attentionCount.toString(), sub: "Endpoints with dead letters", color: attentionCount > 0 ? "text-amber-500" : "text-gray-500" },
   ];
 
   return (

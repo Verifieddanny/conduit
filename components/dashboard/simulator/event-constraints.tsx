@@ -1,11 +1,16 @@
 "use client";
 import { ShieldCheck, Route, FileCheck, AlertTriangle, ArrowRight } from "lucide-react";
+import { useAuthStore } from "@/store/use-auth-store";
+import Link from "next/link";
 
 export default function EventConstraints() {
+  const apiKey = useAuthStore(state => state.apiKey);
+  const displayKey = apiKey ? `${apiKey.substring(0, 8)}••••••••••••` : "cdt_••••••••••••";
+
   const constraints = [
     {
       label: "Auth",
-      title: "Bearer cdt_••••••••••••",
+      title: `Bearer ${displayKey}`,
       desc: "Simulator uses your API key, not the dashboard JWT.",
       icon: ShieldCheck
     },
@@ -93,9 +98,13 @@ export default function EventConstraints() {
           ))}
         </div>
 
-        <button className="w-full mt-8 py-3 bg-white/5 border border-white/10 rounded-xl text-[11px] font-bold text-gray-400 hover:text-white transition-all uppercase tracking-widest">
+        <Link 
+            href="/dashboard/api-key"
+            className="w-full mt-8 py-3 bg-white/5 border border-white/10 rounded-xl text-[11px] font-bold text-gray-400 hover:text-white transition-all uppercase tracking-widest flex items-center justify-center gap-2"
+        >
             Review API key usage
-        </button>
+            <ArrowRight size={14} />
+        </Link>
       </div>
     </div>
   );

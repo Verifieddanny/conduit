@@ -1,16 +1,65 @@
-import { CheckCircle2, Database, Send, RefreshCcw } from "lucide-react";
+import { CheckCircle2, Database, Send, RefreshCcw, XCircle, Clock } from "lucide-react";
+import { Callback } from "@/hooks/use-deliveries";
+import { format } from "date-fns";
 
-export default function CallbackLifecycle() {
+export default function CallbackLifecycle({ callback }: { callback: Callback | null }) {
+  if (!callback) {
+    return (
+      <div className="bg-[#111113] border border-white/5 rounded-2xl p-6">
+        <span className="text-[9px] font-bold text-gray-600 uppercase tracking-widest block mb-1">Recent Activity</span>
+        <h3 className="text-sm font-bold text-white mb-6">No callbacks yet</h3>
+        <p className="text-[10px] text-gray-500 italic">Callbacks will appear here as they ingress.</p>
+      </div>
+    );
+  }
+
   const steps = [
-    { title: "Inbound webhook accepted", time: "10:41:23 UTC", icon: CheckCircle2, color: "text-[#00f2ad]" },
-    { title: "Callback persisted + queued", time: "PostgreSQL + Redis queue", icon: Database, color: "text-blue-400" },
-    { title: "Destination returned 500", time: "Retryable response detected", icon: Send, color: "text-red-500" },
-    { title: "Retry scheduled with jitter", time: "next at 10:50 UTC", icon: RefreshCcw, color: "text-amber-500" },
+    { 
+        title: "Inbound webhook accepted", 
+        time: format(new Date(callback.createdAt), "HH:mm:ss 'UTC'"), 
+        icon: CheckCircle2, 
+        color: "text-[#00f2ad]" 
+    },
+    { 
+        title: "Callback persisted + queued", 
+        time: "PostgreSQL + Redis queue", 
+        icon: Database, 
+        color: "text-blue-400" 
+    },
+    { 
+        title: callback.status === 'delivered' ? "Delivery Successful" : `Destination returned ${callback.responseCode || 'error'}`, 
+        time: callback.status === 'delivered' ? "2xx Success received" : "Retryable response detected", 
+        icon: callback.status === 'delivered' ? CheckCircle2 : Send, 
+        color: callback.status === 'delivered' ? "text-[#00f2ad]" : "text-red-500" 
+    },
   ];
+
+  if (callback.status === 'failed' && callback.nextRetry) {
+    steps.push({
+        title: "Retry scheduled with jitter",
+        time: `next at ${format(new Date(callback.nextRetry), "HH:mm:ss 'UTC'")}`,
+        icon: RefreshCcw,
+        color: "text-amber-500"
+    });
+  } else if (callback.status === 'dead') {
+    steps.push({
+        title: "Delivery entered dead state",
+        time: "Maximum retries exceeded",
+        icon: XCircle,
+        color: "text-red-500"
+    });
+  } else if (callback.status === 'pending') {
+    steps.push({
+        title: "Delivery in progress",
+        time: "Awaiting next attempt",
+        icon: Clock,
+        color: "text-blue-500"
+    });
+  }
 
   return (
     <div className="bg-[#111113] border border-white/5 rounded-2xl p-6">
-      <span className="text-[9px] font-bold text-gray-600 uppercase tracking-widest block mb-1">Latest Failed Path</span>
+      <span className="text-[9px] font-bold text-gray-600 uppercase tracking-widest block mb-1">Latest Path: {callback.eventType}</span>
       <h3 className="text-sm font-bold text-white mb-6">Callback lifecycle</h3>
 
       <div className="space-y-8 relative before:absolute before:left-2.75 before:top-2 before:bottom-2 before:w-px before:bg-white/5">

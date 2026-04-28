@@ -19,7 +19,7 @@ export default function SearchHeader() {
       </div>
 
       <div className="flex items-center gap-4">
-        <button className="flex items-center gap-2 bg-[#00f2ad] text-black px-4 py-2 rounded-lg font-bold text-xs hover:bg-[#00d195] transition-all">
+        <button className="cursor-pointer flex items-center gap-2 bg-[#00f2ad] text-black px-4 py-2 rounded-lg font-bold text-xs hover:bg-[#00d195] transition-all">
           <Plus size={16} />
           Create Endpoint
         </button>
