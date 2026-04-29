@@ -25,7 +25,7 @@ const Navbar = () => {
                 </div>
 
                 <div className="flex items-center gap-6 font-plex">
-                    <Link href="/" className="hidden sm:block text-sm text-gray-400 hover:text-white transition-colors">Home</Link>
+                    <Link href="/" className="text-sm text-gray-400 hover:text-white transition-colors">Home</Link>
                     <Link href="/login"
                         type='button' className="bg-[#00f2ad] text-black px-4 py-1.5 rounded font-bold text-xs cursor-pointer">
                         Sign In
