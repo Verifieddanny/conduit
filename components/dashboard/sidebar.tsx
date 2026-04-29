@@ -1,12 +1,18 @@
 "use client";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { LayoutGrid, Radio, Zap, Key, Book, Activity, LogOut } from "lucide-react";
+import { LayoutGrid, Radio, Zap, Key, Book, Activity, LogOut, X } from "lucide-react";
 import { useAuthStore } from "@/store/use-auth-store";
 import { useEndpoints } from "@/hooks/use-endpoints";
 import Image from "next/image";
+import { motion, AnimatePresence } from "framer-motion";
 
-export default function Sidebar() {
+interface SidebarProps {
+  isOpen?: boolean;
+  onClose?: () => void;
+}
+
+export default function Sidebar({ isOpen, onClose }: SidebarProps) {
   const pathname = usePathname();
   const router = useRouter();
   const logout = useAuthStore((state) => state.logout);
@@ -27,10 +33,10 @@ export default function Sidebar() {
     router.push("/");
   };
 
-  return (
-    <aside className="w-64 h-screen border-r border-white/5 bg-[#0a0a0a] flex-col shrink-0 hidden lg:flex">
+  const SidebarContent = (
+    <>
       {/* Brand */}
-      <div className="p-6 mb-4">
+      <div className="p-6 mb-4 flex items-center justify-between">
         <div className="flex items-center gap-2">
           <Image src="/svgs/conduit-logo.svg"
             alt="Conduit Logo"
@@ -40,9 +46,19 @@ export default function Sidebar() {
           />
           <span className="font-bold text-lg tracking-tight">Conduit</span>
         </div>
-        <div className="mt-8">
-          <span className="text-[9px] font-bold text-gray-600 uppercase tracking-widest">Workspace</span>
-        </div>
+        {onClose && (
+          <button
+            title="close"
+            onClick={onClose}
+            className="lg:hidden p-2 text-gray-400 hover:text-white transition-colors"
+          >
+            <X size={20} />
+          </button>
+        )}
+      </div>
+
+      <div className="px-6 mb-4">
+        <span className="text-[9px] font-bold text-gray-600 uppercase tracking-widest">Workspace</span>
       </div>
 
       {/* Nav Links */}
@@ -55,6 +71,7 @@ export default function Sidebar() {
             <Link
               key={link.name}
               href={link.href}
+              onClick={() => onClose?.()}
               className={`flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-all group ${isActive
                 ? "bg-[#00f2ad]/10 text-[#00f2ad] font-medium"
                 : "text-gray-400 hover:text-white hover:bg-white/5"
@@ -85,7 +102,7 @@ export default function Sidebar() {
         <div className="bg-[#111113] border border-white/5 p-4 rounded-xl">
           <div className="flex items-center gap-3 mb-4">
             <div className="w-8 h-8 rounded-lg bg-[#00f2ad]/20 flex items-center justify-center text-[#00f2ad] font-bold text-xs border border-[#00f2ad]/20">
-              {username[0].toUpperCase() || "U"}
+              {username ? username[0].toUpperCase() : "U"}
             </div>
             <div className="min-w-0">
               <p className="text-xs font-bold text-white truncate">{username || "username"}</p>
@@ -101,6 +118,41 @@ export default function Sidebar() {
           </button>
         </div>
       </div>
-    </aside>
+    </>
+  );
+
+  return (
+    <>
+      {/* Desktop Sidebar */}
+      <aside className="w-64 h-screen border-r border-white/5 bg-[#0a0a0a] flex-col shrink-0 hidden lg:flex sticky top-0">
+        {SidebarContent}
+      </aside>
+
+      {/* Mobile Sidebar */}
+      <AnimatePresence>
+        {isOpen && (
+          <>
+            {/* Overlay */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={onClose}
+              className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 lg:hidden"
+            />
+            {/* Sidebar Panel */}
+            <motion.aside
+              initial={{ x: "100%" }}
+              animate={{ x: 0 }}
+              exit={{ x: "100%" }}
+              transition={{ type: "spring", damping: 25, stiffness: 200 }}
+              className="fixed inset-y-0 right-0 w-72 bg-[#0a0a0a] border-l border-white/5 flex flex-col z-50 lg:hidden shadow-2xl"
+            >
+              {SidebarContent}
+            </motion.aside>
+          </>
+        )}
+      </AnimatePresence>
+    </>
   );
 }
