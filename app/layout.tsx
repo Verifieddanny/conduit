@@ -19,6 +19,7 @@ const ibmPlexSans = IBM_Plex_Sans({
 });
 
 export const metadata = {
+  metadataBase: new URL("https://conduit-delivery.vercel.app"),
   title: "Conduit | Reliable Webhook Delivery & Management",
   description: "Conduit ensures your webhooks are delivered reliably with automatic retries, exponential backoff, and dead-letter queues. Integrated simulator and detailed analytics for developers.",
   keywords: ["webhook", "delivery", "reliability", "developer tools", "API", "retries", "dead-letter queue"],
@@ -26,7 +27,22 @@ export const metadata = {
     title: "Conduit | Reliable Webhook Delivery",
     description: "Built for engineers who need 100% webhook reliability.",
     type: "website",
-  }
+    url: "/",
+    images: [
+      {
+        url: "/og-image.jpg",
+        width: 1200,
+        height: 630,
+        alt: "Conduit - Webhook Delivery Platform",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Conduit | Reliable Webhook Delivery",
+    description: "Built for engineers who need 100% webhook reliability.",
+    images: ["/og-image.jpg"],
+  },
 };
 
 export default function RootLayout({

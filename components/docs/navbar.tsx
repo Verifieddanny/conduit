@@ -3,6 +3,7 @@ import { useState } from 'react';
 import Image from 'next/image';
 import { Menu, X } from 'lucide-react';
 import MobileSidebar from './mobile-sidebar';
+import Link from 'next/link';
 
 const Navbar = () => {
     const [isOpen, setIsOpen] = useState(false);
@@ -12,7 +13,7 @@ const Navbar = () => {
             <nav className="fixed top-0 z-50 w-full border-b border-white/5 bg-[#0a0a0a]/80 backdrop-blur-md px-6 h-16 flex items-center justify-between">
                 <div className="flex items-center gap-2">
                     {/* Mobile Toggle Button */}
-                    <button 
+                    <button
                         onClick={() => setIsOpen(!isOpen)}
                         className="lg:hidden p-2 -ml-2 text-gray-400 hover:text-white"
                     >
@@ -22,12 +23,13 @@ const Navbar = () => {
                     <Image src="/svgs/conduit-logo.svg" alt="Logo" width={24} height={24} className='mr-2' />
                     <span className="text-white font-bold tracking-tight text-lg font-plex-kr">Conduit</span>
                 </div>
-                
+
                 <div className="flex items-center gap-6 font-plex">
-                    <a href="/" className="hidden sm:block text-sm text-gray-400 hover:text-white transition-colors">Home</a>
-                    <button type='button' className="bg-[#00f2ad] text-black px-4 py-1.5 rounded font-bold text-xs">
+                    <Link href="/" className="hidden sm:block text-sm text-gray-400 hover:text-white transition-colors">Home</Link>
+                    <Link href="/login"
+                        type='button' className="bg-[#00f2ad] text-black px-4 py-1.5 rounded font-bold text-xs cursor-pointer">
                         Sign In
-                    </button>
+                    </Link>
                 </div>
             </nav>
 

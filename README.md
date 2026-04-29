@@ -1,4 +1,11 @@
-# Conduit
+<p align="center">
+  <img src="public/favicon.ico" width="80" alt="Shipyard Logo" />
+</p>
+
+# Conduit - Frontend
+
+[![Status](https://img.shields.io/badge/status-live-emerald)](http://useshipyard.xyz)
+[![License](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 
 The dashboard and developer portal for [Conduit Engine](https://github.com/Verifieddanny/conduit-engine) — a source-agnostic webhook relay service that receives, stores, and reliably delivers webhook events with retry logic, payload signing, and full delivery observability.
 

@@ -1,6 +1,7 @@
 import React from 'react';
 import { Server, Share2, Database, RefreshCw, XCircle } from 'lucide-react';
 import Image from 'next/image';
+import Link from 'next/link';
 
 const Hero = () => {
   return (
@@ -19,12 +20,14 @@ const Hero = () => {
 
         {/* Buttons */}
         <div className="flex flex-row gap-4 justify-center mb-24">
-          <button type='button' className="px-8 py-3 bg-[#00f2ad] text-black font-bold rounded-md hover:bg-[#00d195] transition-colors">
+          <Link href="/register"
+            type='button' className="px-8 py-3 bg-[#00f2ad] text-black font-bold rounded-md hover:bg-[#00d195] transition-colors">
             Get Started
-          </button>
-          <button type='button' className="px-8 py-3 bg-transparent border border-gray-800 text-white font-medium rounded-md hover:bg-white/5 transition-colors">
+          </Link>
+          <Link href="/docs"
+            type='button' className="px-8 py-3 bg-transparent border border-gray-800 text-white font-medium rounded-md hover:bg-white/5 transition-colors">
             View Docs
-          </button>
+          </Link>
         </div>
       </div>
 

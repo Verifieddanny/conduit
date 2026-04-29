@@ -2,9 +2,22 @@
 import { useRecentDeliveries } from "@/hooks/use-deliveries";
 import { Loader2 } from "lucide-react";
 import Link from "next/link";
+import { useSearchStore } from "@/store/use-search-store";
 
 export default function RecentDeliveries() {
   const { data: deliveries, isLoading } = useRecentDeliveries();
+  const { query } = useSearchStore();
+
+  const filteredDeliveries = deliveries?.filter((d) => {
+    const searchStr = query.toLowerCase();
+    return (
+      d.id.toLowerCase().includes(searchStr) ||
+      d.eventType.toLowerCase().includes(searchStr) ||
+      d.endpoint?.endpointPath.toLowerCase().includes(searchStr) ||
+      d.status.toLowerCase().includes(searchStr) ||
+      d.responseCode?.toLowerCase().includes(searchStr)
+    );
+  });
 
   return (
     <div className="bg-[#111113] border border-white/5 rounded-2xl overflow-hidden">
@@ -25,9 +38,9 @@ export default function RecentDeliveries() {
         <div className="flex items-center justify-center py-20">
           <Loader2 className="animate-spin text-gray-500" size={24} />
         </div>
-      ) : !deliveries || deliveries.length === 0 ? (
+      ) : !filteredDeliveries || filteredDeliveries.length === 0 ? (
         <div className="py-20 text-center text-gray-500 text-sm">
-          No recent deliveries found.
+          {query ? `No deliveries found matching "${query}"` : "No recent deliveries found."}
         </div>
       ) : (
         <table className="w-full text-left">
@@ -40,7 +53,7 @@ export default function RecentDeliveries() {
             </tr>
           </thead>
           <tbody className="divide-y divide-white/5">
-            {deliveries.map((d) => (
+            {filteredDeliveries.map((d) => (
               <tr key={d.id} className="hover:bg-white/2 transition-colors group cursor-pointer text-[12px]">
                 <td className="px-6 py-4 font-mono text-gray-400 group-hover:text-white">{d.eventType}</td>
                 <td className="px-6 py-4 text-gray-600 font-mono truncate max-w-50">{d.endpoint?.endpointPath || 'Unknown'}</td>
