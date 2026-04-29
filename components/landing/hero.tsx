@@ -1,5 +1,5 @@
 import React from 'react';
-import { Server, Share2, Database, RefreshCw, XCircle } from 'lucide-react';
+import { Server, Share2, Database, RefreshCw, XCircle, ArrowDown } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 
@@ -32,31 +32,28 @@ const Hero = () => {
       </div>
 
       {/* --- Visual Diagram Component --- */}
-      <div className="relative w-full max-w-4xl p-12 rounded-2xl bg-[#151518] border border-white/5 shadow-2xl">
-        <div className="flex items-center justify-between relative">
+      <div className="relative w-full max-w-4xl p-6 md:p-12 rounded-2xl bg-[#151518] border border-white/5 shadow-2xl">
+        {/* Mobile: Column | Desktop: Row */}
+        <div className="flex flex-col md:flex-row items-center justify-between relative gap-8 md:gap-0">
 
           {/* External Service Node */}
-          <div className="flex flex-col items-center gap-4 p-6 rounded-lg bg-[#0d0d0f] border border-white/5 w-40">
+          <div className="flex flex-col items-center gap-4 p-6 rounded-lg bg-[#0d0d0f] border border-white/5 w-full md:w-40">
             <div className="p-3 bg-white/5 rounded-md border border-white/10">
               <Server className="w-6 h-6 text-gray-400" />
             </div>
             <span className="text-xs font-semibold text-gray-300">External Service</span>
           </div>
 
-          {/* Connection Dot 1 */}
-          <div className="flex-1 flex justify-center">
-            <div className="w-2 h-2 rounded-full bg-[#00f2ad] shadow-[0_0_15px_#00f2ad]" />
+          {/* Connection 1 (Dot/Arrow) */}
+          <div className="flex md:flex-1 justify-center">
+            <div className="w-2 h-2 md:w-2 md:h-2 rounded-full bg-[#00f2ad] shadow-[0_0_15px_#00f2ad] hidden md:block" />
+            <ArrowDown className="w-5 h-5 text-[#00f2ad] md:hidden animate-pulse" />
           </div>
 
           {/* Conduit Node (Active) */}
-          <div className="flex flex-col items-center gap-4 p-6 rounded-lg bg-[#0d0d0f] border-2 border-[#00f2ad]/50 w-40 relative">
+          <div className="flex flex-col items-center gap-4 p-6 rounded-lg bg-[#0d0d0f] border-2 border-[#00f2ad]/50 w-full md:w-40 relative">
             <div className="p-3 bg-[#00f2ad]/10 rounded-md flex items-center justify-center border border-[#00f2ad]/30">
-              <Image src="/svgs/conduit-logo.svg"
-                alt="Conduit Logo"
-                width={24}
-                height={24}
-                className='inline-block'
-              />
+              <Image src="/svgs/conduit-logo.svg" alt="Conduit Logo" width={24} height={24} />
             </div>
             <span className="text-xs font-semibold text-white tracking-wider">Conduit</span>
             <div className="flex gap-1">
@@ -67,16 +64,17 @@ const Hero = () => {
           </div>
 
           {/* Retry Connection Path */}
-          <div className="flex-1 flex flex-col items-center gap-2">
+          <div className="flex md:flex-1 flex-col items-center gap-2">
             <div className="flex items-center gap-1.5 px-3 py-1 bg-[#1a1608] border border-yellow-700/30 rounded-full">
-              <RefreshCw className="w-3 h-3 text-yellow-500" />
+              <RefreshCw className="w-3 h-3 text-yellow-500 animate-spin-slow" />
               <span className="text-[10px] font-mono text-yellow-500">Retry (5s)</span>
             </div>
-            <div className="w-2 h-2 rounded-full bg-orange-500 shadow-[0_0_12px_orange]" />
+            <div className="w-2 h-2 rounded-full bg-orange-500 shadow-[0_0_12px_orange] hidden md:block" />
+            <ArrowDown className="w-5 h-5 text-orange-500 md:hidden" />
           </div>
 
           {/* Your Server Node (Failing) */}
-          <div className="flex flex-col items-center gap-4 p-6 rounded-lg bg-[#0d0d0f] border border-white/5 w-44">
+          <div className="flex flex-col items-center gap-4 p-6 rounded-lg bg-[#0d0d0f] border border-white/5 w-full md:w-44">
             <div className="p-3 bg-white/5 rounded-md border border-white/10">
               <Database className="w-6 h-6 text-gray-400" />
             </div>
