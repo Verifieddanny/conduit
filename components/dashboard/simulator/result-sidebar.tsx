@@ -85,6 +85,3 @@ export default function SimulatorResultSidebar({ result }: { result: SimulationR
     </div>
   );
 }
-
-//To resume this session: gemini --resume df8ae975-a47c-4f30-bc26-5dcdd56c2f3b 
-// gemini --resume 67ca66f6-f967-46f0-83b2-bb1021b179b2 
